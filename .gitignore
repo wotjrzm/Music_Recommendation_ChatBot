@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+chatbot/
+
+# IDE
+.vscode/
+.idea/
+
+# Large Data & Models
+bert_ckpt/
+model/
+*.h5
+*.ckpt
+data/lyrics_by_year_1964_2023.csv
+# Assuming other small CSVs are okay to upload, but large ones should be ignored if >100MB. 
+# lyrics_by_year_1964_2023.csv is ~6MB, so it fits in GitHub (limit 100MB).
+# But if it grows, uncomment the line below.
+# data/lyrics_by_year_1964_2023.csv
+
+# Logs
+*.log
