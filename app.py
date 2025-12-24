@@ -5,6 +5,69 @@ from chatbot_logic import EmotionChatBot, get_songs_by_emotion
 # 페이지 설정
 st.set_page_config(page_title="감정 기반 음악 추천 봇", page_icon="🎵")
 
+# CSS 스타일 주입
+st.markdown("""
+<style>
+    /* 폰트 적용 */
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    
+    html, body, [class*="css"] {
+        font-family: 'Pretendard', sans-serif;
+    }
+    
+    /* 타이틀 스타일 */
+    h1 {
+        background: linear-gradient(to right, #F63366, #FFFD80);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800 !important;
+    }
+
+    /* 추천 카드 스타일 */
+    .recommendation-card {
+        background-color: #262730;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        border: 1px solid #3d3f4e;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s;
+        height: 100%;
+    }
+    
+    .recommendation-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(246, 51, 102, 0.2);
+        border-color: #F63366;
+    }
+    
+    .song-title {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #ffffff;
+        margin-bottom: 8px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .song-artist {
+        font-size: 0.95rem;
+        color: #c0c0c0;
+        margin-bottom: 12px;
+    }
+    
+    .song-genre {
+        font-size: 0.8rem;
+        color: #F63366;
+        background-color: rgba(246, 51, 102, 0.1);
+        padding: 4px 10px;
+        border-radius: 20px;
+        display: inline-block;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # 세션 상태 초기화
 if "chatbot" not in st.session_state:
     try:
@@ -87,9 +150,22 @@ if st.session_state.chat_finished:
         songs = get_songs_by_emotion(emotion)
         
         if songs:
-            for i, song in enumerate(songs[:5]): # 상위 5개만 표시
-                st.markdown(f"**{i+1}. {song['title']}** - {song['singer']}")
-                st.caption(f"장르: {song['genre']}")
+            st.markdown("### 🎧 추천 재생목록")
+            st.write("") # 간격 추가
+            
+            # 카드형 그리드 레이아웃
+            cols = st.columns(2)
+            
+            for i, song in enumerate(songs[:6]): # 최대 6개로 (2열 x 3행)
+                col = cols[i % 2]
+                with col:
+                    st.markdown(f"""
+                    <div class="recommendation-card">
+                        <div class="song-title">{i+1}. {song['title']}</div>
+                        <div class="song-artist">🎤 {song['singer']}</div>
+                        <div class="song-genre">#{song['genre']}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
         else:
             st.warning("추천할 노래를 찾지 못했습니다.")
             
